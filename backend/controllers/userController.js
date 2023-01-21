@@ -1,7 +1,7 @@
+const asyncHandler = require("express-async-handler");
 // @route /api/users
 // Public
-
-const registerUser = (req, res) => {
+const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
@@ -9,13 +9,13 @@ const registerUser = (req, res) => {
     throw new Error("Please include all fields");
   }
   res.json({ message: "Registering a User" });
-};
+});
 
 // @route /api/users/login
 // Public
-const loginUser = (req, res) => {
+const loginUser = asyncHandler(async (req, res) => {
   res.send("Login User");
-};
+});
 
 module.exports = {
   registerUser,
