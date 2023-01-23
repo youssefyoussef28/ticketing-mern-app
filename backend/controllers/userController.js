@@ -62,6 +62,12 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
+// @route /api/users/login
+// Private
+const getMe = asyncHandler(async (req, res) => {
+  res.send("Me");
+});
+
 // Function that is used in the Response (Login and RegisterFunction)
 
 const generateToken = (id) => {
@@ -73,4 +79,5 @@ const generateToken = (id) => {
 module.exports = {
   registerUser,
   loginUser,
+  getMe, 
 };
