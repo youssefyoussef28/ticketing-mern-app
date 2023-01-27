@@ -1,9 +1,14 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaUser } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 import { register } from "../features/auth/authSlice";
+
+// eslint-disable-next-line react-hooks/rules-of-hooks
+const navigate = useNavigate();
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -15,19 +20,23 @@ const Register = () => {
 
   const { name, email, password, password2 } = formData;
 
-
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+    // Redirect when Logged in
+    if (isSuccess || user) {
+      navigate("/");
+    }
+  });
 
   ///////////////////   ReduxTK
   const dispatch = useDispatch();
 
-  const { user, isLoading, isSuccess, message } = useSelector(
+  const { user, isLoading, isSuccess, message, isError } = useSelector(
     (state) => state.auth
   );
   /////////////////  ReduxTK
-
-
-
-
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -35,7 +44,6 @@ const Register = () => {
       [e.target.name]: e.target.value,
     }));
   };
-
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -51,10 +59,6 @@ const Register = () => {
       dispatch(register(userData));
     }
   };
-
-
-
-
 
   return (
     <>
