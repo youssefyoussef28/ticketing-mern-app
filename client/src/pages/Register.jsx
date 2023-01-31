@@ -5,12 +5,11 @@ import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { register } from "../features/auth/authSlice";
-
-// eslint-disable-next-line react-hooks/rules-of-hooks
-const navigate = useNavigate();
+import { register, reset } from "../features/auth/authSlice";
 
 const Register = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,6 +19,14 @@ const Register = () => {
 
   const { name, email, password, password2 } = formData;
 
+  ///////////////////   ReduxTK
+  const dispatch = useDispatch();
+
+  const { user, isLoading, isSuccess, message, isError } = useSelector(
+    (state) => state.auth
+  );
+  /////////////////  ReduxTK
+
   useEffect(() => {
     if (isError) {
       toast.error(message);
@@ -28,15 +35,8 @@ const Register = () => {
     if (isSuccess || user) {
       navigate("/");
     }
-  });
-
-  ///////////////////   ReduxTK
-  const dispatch = useDispatch();
-
-  const { user, isLoading, isSuccess, message, isError } = useSelector(
-    (state) => state.auth
-  );
-  /////////////////  ReduxTK
+    dispatch(reset());
+  }, [isError, isSuccess, user, message, navigate, dispatch]);
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -47,7 +47,6 @@ const Register = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-
     if (password !== password2) {
       toast.error("Passwords do not match");
     } else {
