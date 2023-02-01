@@ -4,6 +4,7 @@ import { FaUser } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Spinner from "../components/Spinner";
 
 import { register, reset } from "../features/auth/authSlice";
 
@@ -59,6 +60,9 @@ const Register = () => {
     }
   };
 
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
     <>
       <section className="heading">
