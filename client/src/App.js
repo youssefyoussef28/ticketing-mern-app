@@ -21,6 +21,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/new-ticket" element={<PrivateRoute />}>
+              {/* The Child route Return in Outlet */}
               <Route path="/new-ticket" element={<NewTicket />} />
             </Route>
           </Routes>
