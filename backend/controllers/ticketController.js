@@ -13,6 +13,89 @@ const getTickets = asyncHandler(async (req, res) => {
   res.status(200).json(tickets);
 });
 
+const getTicket = asyncHandler(async (req, res) => {
+  // Get user using the ID in the JWT
+  const user = await User.findById(req.user.id);
+
+  if (!user) {
+    res.status(401);
+    throw new Error("User not found");
+  }
+
+  const ticket = await Ticket.findById(req.params.id);
+
+  if (!ticket) {
+    res.status(404);
+    throw new Error("Ticket not found");
+  }
+
+  if (ticket.user.toString() !== req.user.id) {
+    res.status(401);
+    throw new Error("Not Authorized");
+  }
+  res.status(200).json(ticket);
+});
+
+// Delete Ticket
+// Delete /api/ticket/:id
+
+const deleteTicket = asyncHandler(async (req, res) => {
+  // Get user using the ID in the JWT
+  const user = await User.findById(req.user.id);
+
+  if (!user) {
+    res.status(401);
+    throw new Error("User not found");
+  }
+
+  const ticket = await Ticket.findById(req.params.id);
+
+  if (!ticket) {
+    res.status(404);
+    throw new Error("Ticket not found");
+  }
+
+  if (ticket.user.toString() !== req.user.id) {
+    res.status(401);
+    throw new Error("Not Authorized");
+  }
+
+  await ticket.remove();
+  res.status(200).json({ success: true });
+});
+
+// UPDATE Ticket
+// Delete PUT  /api/ticket/:id
+
+const updateTicket = asyncHandler(async (req, res) => {
+  // Get user using the ID in the JWT
+  const user = await User.findById(req.user.id);
+
+  if (!user) {
+    res.status(401);
+    throw new Error("User not found");
+  }
+
+  const ticket = await Ticket.findById(req.params.id);
+
+  if (!ticket) {
+    res.status(404);
+    throw new Error("Ticket not found");
+  }
+
+  if (ticket.user.toString() !== req.user.id) {
+    res.status(401);
+    throw new Error("Not Authorized");
+  }
+
+  const updatedTicket = await Ticket.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true }
+  );
+  res.status(200).json(updatedTicket);
+});
+
 const createTicket = asyncHandler(async (req, res) => {
   const { product, description } = req.body;
 
@@ -39,4 +122,7 @@ const createTicket = asyncHandler(async (req, res) => {
 module.exports = {
   getTickets,
   createTicket,
+  getTicket,
+  updateTicket,
+  deleteTicket,
 };
